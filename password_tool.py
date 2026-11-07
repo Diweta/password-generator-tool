@@ -1,0 +1,40 @@
+import random
+import string
+from datetime import datetime
+
+def print_banner():
+    print("=" * 50)
+    print("   CYBERSECURITY PASSWORD GENERATOR & ANALYZER v2.0   ")
+    print("=" * 50)
+
+def generate_password(length, use_symbols=True):
+    characters = string.ascii_letters + string.digits
+    if use_symbols:
+        characters += "!@#$%^&*()_+-="
+    password = ''.join(random.choice(characters) for _ in range(length))
+    return password
+
+def check_strength(password):
+    has_symbol = any(c in "!@#$%^&*()_+-=" for c in password)
+    if len(password) < 8:
+        return "WEAK (Too short - vulnerable to brute force)"
+    elif len(password) >= 12 and has_symbol:
+        return "STRONG (Meets cybersecurity standards)"
+    else:
+        return "MODERATE (Consider adding length or symbols)"
+
+def save_to_file(password, strength):
+    with open("saved_passwords.txt", "a") as file:
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        file.write(f"[{timestamp}] Password: {password} | Strength: {strength}\n")
+
+if __name__ == "__main__":
+    print_banner()
+    pwd_length = 14
+    new_pwd = generate_password(pwd_length, use_symbols=True)
+    pwd_strength = check_strength(new_pwd)
+    
+    print(f"[+] Generated Password : {new_pwd}")
+    print(f"[+] Security Rating    : {pwd_strength}")
+    save_to_file(new_pwd, pwd_strength)
+    print("[+] Saved to saved_passwords.txt successfully!")
